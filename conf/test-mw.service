@@ -1,0 +1,12 @@
+[Unit]
+Description=Test Middleware
+After=syslog.target
+
+[Service]
+ExecStart=/usr/bin/python3.7 launcher.py test-mw
+WorkingDirectory=/home/rainus/test-mw
+Restart=always
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target
