@@ -4,6 +4,7 @@ from pymongo import MongoClient
 from config import DATABASE_URI
 
 DATABASE_NAME = 'infortab'
+STORE_CONFIG_TABLE = 'store_config'
 
 client = None
 

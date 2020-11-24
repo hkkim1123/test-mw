@@ -2,31 +2,25 @@ import logging
 import time
 from queue import Queue
 from threading import Thread
-
 from utils.db_session import create_mongo_client
-from apscheduler.schedulers.background import BackgroundScheduler
+from scheduled_job import init_scheduled_job
 
 
 queue = Queue()
-scheduler = BackgroundScheduler()
-
-
-@scheduler.scheduled_job('cron', minute='*/1')
-def schedule_test():
-    logging.info("schedule_test")
 
 
 def notification_executor():
-    logging.info("notification_executor method start")
     while True:
         try:
             message = queue.get()
             if message == "product update":  # product update
                 logging.info("message : %s", message)
                 # product update 처리
+                # ....
             elif message == "template update":  # template update
                 logging.info("message : %s", message)
                 # template update 처리
+                # ....
             else:
                 logging.info("message : %s", message)
         except Exception as e:
@@ -34,34 +28,30 @@ def notification_executor():
 
 
 def notification_recv():
-    logging.info("notification_recv method start")
+    logging.info(queue.maxsize())
     count = 0
     while True:
         try:
             # NotificationService signalR connect
             # NotificationService message recv
+            # .....
 
             # queue test
             if count % 2 == 0:
                 queue.put("product update")
             else:
                 queue.put("template update")
-            time.sleep(3)
+            time.sleep(50)
             count += 1
+            pass
         except Exception as e:
             logging.exception("handle error : %s", e)
 
 
 def start():
-    logging.info("start method start")
-    # ESL Controller 연동 api method
-    # 1. 상품 바코드 스캔
-    # - ESL Controller(barcode) -> comm-mw(barcode -> articleNumber) -> PRESITIGE(articleNumber) -> comm-mw(articleNumber -> barcode) -> ESL Controller(barcode)
-    # 2. 태그 스캔
-
-    scheduler.start()
-
+    logging.info("init start method")
     create_mongo_client()  # mongo connect
+    init_scheduled_job()  # cron
     Thread(target=notification_executor).start()  # NotificationService message executor
     notification_recv()  # NotificationService message receive
 
