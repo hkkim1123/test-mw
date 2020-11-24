@@ -5,7 +5,7 @@ from test import start
 
 if __name__ == '__main__':
     logging.info("main start")
-    # logging.config.dictConfig(LOGGING_CONFIG)
+    logging.config.dictConfig(LOGGING_CONFIG)
     start()
     logging.info("main end")
 
